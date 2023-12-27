@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 /*
     ASCII Values
@@ -28,9 +29,12 @@ int main() {
     scanf("%17s", &address);
 
     for (i = 0; i < strlen(&address); i++) {
+        address[i] = (char) toupper(address[i]);
         char pair[2];
-        if ( isSymbol(address[i+1]) ) {continue;}
 
+        // If there is a non-character or non-hex value entered, skip
+        if ( isSymbol(address[i+1]) ) {continue;}
+        if (address[i] > 'F') {continue;}
            
     }
 

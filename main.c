@@ -22,21 +22,28 @@ int isSymbol(char character) {
 
 int main() {
     char address[18];
-    int addressBytes[18];
+    int addressBytes[6];
     int i = 0;
 
     printf("What is the MAC address?\n");
     scanf("%17s", &address);
 
-    for (i = 0; i < strlen(&address); i++) {
+    for (i = 0; i < strlen(address); i++) {
+        char pair[3];
         address[i] = (char) toupper(address[i]);
-        char pair[2];
 
         // If there is a non-character or non-hex value entered, skip
         if ( isSymbol(address[i+1]) ) {continue;}
+        if ( isSymbol(address[i]) ) {continue;}
         if (address[i] > 'F') {continue;}
-           
+        pair[0] = address[i];
+        pair[1] = address[i+1];
+        pair[2] = '\0';
+
+        addressBytes[i] = (int) strtol(pair, NULL, 16);
     }
+
+    printf("%x\n", addressBytes);
 
     return 0;
 }

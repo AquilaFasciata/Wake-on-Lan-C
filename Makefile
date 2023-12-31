@@ -1,8 +1,8 @@
-output: main.o
-	gcc main.o -o wol
+output: obj/main.o
+	gcc obj/main.o -o wol
 
-main.o: main.c
-	gcc -c main.c
+obj/main.o: src/main.c
+	gcc -c src/main.c -o obj/main.o
 
 clean:
 	rm *.o

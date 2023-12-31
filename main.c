@@ -11,7 +11,6 @@
 */
 
 
-
 int isSymbol(char character) {
     if (character < 48) {return 1;}
         else if (character > 57 && character < 65) {return 1;}
@@ -22,7 +21,7 @@ int isSymbol(char character) {
 
 int main() {
     char address[18];
-    unsigned int addressBytes[13];
+    int addressBytes[6];
     int i = 0;
 
     printf("What is the MAC address?\n");
@@ -32,23 +31,26 @@ int main() {
         address[i] = toupper(address[i]);
     }
 
-    for (i = 0; i < strlen(address) + 5; i++) {
+    // Convert the string to an array of integers
+    int j = 0;
+    for (i = 0; i < strlen(address); i++) {
         char pair[3];
+        address[i] = (char) toupper(address[i]);
 
         // If there is a non-character or non-hex value entered, skip
         if ( isSymbol(address[i+1]) ) {continue;}
         if ( isSymbol(address[i]) ) {continue;}
         if (address[i] > 'F') {continue;}
+
         pair[0] = address[i];
         pair[1] = address[i+1];
         pair[2] = '\0';
 
-        printf("%s\n", pair);
-
-        addressBytes[i] = (int) strtol(pair, NULL, 16);
+        addressBytes[j] = (int) strtol(pair, NULL, 16);
+        j++;
     }
 
-    printf("%x\n", addressBytes);
+    
 
     return 0;
 }

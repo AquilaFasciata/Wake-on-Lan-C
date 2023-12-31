@@ -1,11 +1,15 @@
 
 all: wol
 
-wol: obj/main.o
-	gcc obj/main.o -o wol
+wol: main.o networking.o
+	gcc obj/main.o obj/networking.o -o wol
 
-obj/main.o: src/main.c
+main.o: src/main.c
 	gcc -c src/main.c -o obj/main.o
+
+networking.o: src/networking.c
+	gcc -c src/networking.c -o obj/networking.o
+
 
 clean:
 	rm *.o

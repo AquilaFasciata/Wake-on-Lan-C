@@ -1,4 +1,7 @@
-output: obj/main.o
+
+all: wol
+
+wol: obj/main.o
 	gcc obj/main.o -o wol
 
 obj/main.o: src/main.c

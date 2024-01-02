@@ -1,11 +1,17 @@
 #include <sys/socket.h>
+#include <stdio.h>
+#include <errno.h>
 
 int create_magic_packet(int *address[],  int *destination[]) {
     int i = 0;
 
-    // TODO Implement Program Error Signals
-    if (sizeof(*destination) > 102) {
-        
+    if (sizeof(*destination) / sizeof(int) != 102) {
+        printf("This isn't a valid magic packet allocation; please allocate an array of 102.\n");
+        return EINVAL;
+    }
+    if (sizeof(*address) / sizeof(int) != 6) {
+        printf("This isn't a valid MAC address. Please insert a valid MAC address.\n");
+        return EINVAL;
     }
 
     for (i = 0; i < 6; i++) {

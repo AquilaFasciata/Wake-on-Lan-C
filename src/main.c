@@ -3,6 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <sys/socket.h>
+#include "networking.h"
 
 /*
     ASCII Values
@@ -23,6 +24,7 @@ int isSymbol(char character) {
 int main() {
     char address[18];
     int addressBytes[6];
+    int magicPacket[102];
     int i = 0;
 
     printf("What is the MAC address?\n");
@@ -51,5 +53,10 @@ int main() {
         j++;
     }
 
+    int magicReturn = create_magic_packet(&addressBytes, &magicPacket);
+    if (magicReturn != 0) {
+        return magicReturn;
+    }
+    
     return 0;
 }

@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <errno.h>
 
-int create_magic_packet(int *address[],  int *destination[]) {
+int create_magic_packet(int *address,  int *destination) {
     int i = 0;
 
     if (sizeof(*destination) / sizeof(int) != 102) {

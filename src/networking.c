@@ -14,7 +14,14 @@ int create_magic_packet(int *address[],  int *destination[]) {
         return EINVAL;
     }
 
+    // Adds 6 bytes of FF as per WoL Spec
     for (i = 0; i < 6; i++) {
-        *(destination + i) = *(address + i);
+        *(destination + i) = 255;
     }
+
+    for (i = i; i < sizeof(*destination) / sizeof(int); i++) {
+        *(destination + i) = *(address + (i % sizeof(address)) );
+    }
+
+    return 0;
 }

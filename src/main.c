@@ -5,7 +5,7 @@
 #include <sys/socket.h>
 #include "networking.h"
 
-/*
+/* 
     ASCII Values
     0-9 = 48-57
     A-Z = 65-90
@@ -57,6 +57,6 @@ int main() {
     if (magicReturn != 0) {
         return magicReturn;
     }
-    
+
     return 0;
 }

@@ -4,9 +4,8 @@
 
 int create_magic_packet(int *address, int sizeAddress,  int *destination, int sizeDestination) {
     int i = 0;
-    sizeAddress %= sizeof(*address);
     sizeDestination %= sizeof(*destination);
-
+    printf("%i\n", sizeDestination);
     if (sizeDestination != 102) {
         printf("This isn't a valid magic packet allocation; please allocate an array of 102.\n");
         return EINVAL;
@@ -15,6 +14,7 @@ int create_magic_packet(int *address, int sizeAddress,  int *destination, int si
         printf("This isn't a valid MAC address. Please insert a valid MAC address.\n");
         return EINVAL;
     }
+    sizeAddress %= sizeof(*address);
 
     // Adds 6 bytes of FF as per WoL Spec
     for (i = 0; i < 6; i++) {

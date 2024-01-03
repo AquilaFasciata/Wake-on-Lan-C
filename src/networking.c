@@ -2,14 +2,16 @@
 #include <stdio.h>
 #include <errno.h>
 
-int create_magic_packet(int *address,  int *destination) {
+int create_magic_packet(int *address, int sizeAddress,  int *destination, int sizeDestination) {
     int i = 0;
+    sizeAddress %= sizeof(*address);
+    sizeDestination %= sizeof(*destination);
 
-    if (sizeof(*destination) / sizeof(int) != 102) {
+    if (sizeDestination != 102) {
         printf("This isn't a valid magic packet allocation; please allocate an array of 102.\n");
         return EINVAL;
     }
-    if (sizeof(*address) / sizeof(int) != 6) {
+    if (sizeAddress != 6) {
         printf("This isn't a valid MAC address. Please insert a valid MAC address.\n");
         return EINVAL;
     }
@@ -19,8 +21,8 @@ int create_magic_packet(int *address,  int *destination) {
         *(destination + i) = 255;
     }
 
-    for (i = i; i < sizeof(*destination) / sizeof(int); i++) {
-        *(destination + i) = *(address + (i % sizeof(address)) );
+    for (i = i; i < sizeDestination; i++) {
+        *(destination + i) = *(address + (i % sizeAddress ));
     }
 
     return 0;

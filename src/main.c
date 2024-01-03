@@ -53,7 +53,7 @@ int main() {
         j++;
     }
 
-    int magicReturn = create_magic_packet(&addressBytes, &magicPacket);
+    int magicReturn = create_magic_packet(addressBytes, sizeof(magicPacket), magicPacket, sizeof(magicPacket));
     if (magicReturn != 0) {
         return magicReturn;
     }

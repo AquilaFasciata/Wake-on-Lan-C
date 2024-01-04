@@ -4,10 +4,11 @@
 
 int create_magic_packet(int *address, int sizeAddress,  int *destination, int sizeDestination) {
     int i = 0;
-    sizeDestination %= sizeof(*destination);
+    sizeDestination /= sizeof(*destination);
     printf("%i\n", sizeDestination);
     if (sizeDestination != 102) {
         printf("This isn't a valid magic packet allocation; please allocate an array of 102.\n");
+      printf("The current allocation is %i.\n", sizeDestination);
         return EINVAL;
     }
     if (sizeAddress != 6) {

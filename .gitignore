@@ -1,4 +1,5 @@
 main.exe
 obj/*
+obj/*
 wol
 .vscode/settings.json

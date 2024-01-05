@@ -28,7 +28,7 @@ int main() {
     int i = 0;
 
     printf("What is the MAC address?\n");
-    scanf("%17s", &address);
+    scanf("%17s", address);
 
     for (i = 0; i < strlen(address); i++) {
         address[i] = toupper(address[i]);
@@ -53,7 +53,7 @@ int main() {
         j++;
     }
 
-    int magicReturn = create_magic_packet(&addressBytes, &magicPacket);
+    int magicReturn = create_magic_packet(addressBytes, sizeof(addressBytes), magicPacket, sizeof(magicPacket));
     if (magicReturn != 0) {
         return magicReturn;
     }

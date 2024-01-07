@@ -66,12 +66,15 @@ int main() {
         return magicReturn;
     }
 
+    for (i = 0; i < sizeof(magicPacket) / sizeof(magicPacket[0]); i++) {
+        printf("%c", magicPacket[i]);
+    }
+
     int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, (struct sockaddr*) &recv_addr, sizeof(recv_addr));
     if (sendStatus != sizeof(magicPacket)) {
         printf("There was an error sending the packet.\n");
         return sendStatus;
     }
-
 
     return 0;
 }

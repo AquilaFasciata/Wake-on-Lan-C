@@ -22,7 +22,7 @@ int create_magic_packet(char *address, int sizeAddress,  char *destination, int 
     }
 
     for (i = i; i < sizeDestination; i++) {
-        *(destination + i) = *(address + i);
+        *(destination + i) = *(address + (i % sizeAddress));
     }
 
     return 0;

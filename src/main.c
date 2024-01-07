@@ -26,9 +26,12 @@ int isSymbol(char character) {
 }
 
 int main() {
+    int i = 0;
+
     char address[18];
-    int addressBytes[6];
-    int magicPacket[102];
+    char addressBytes[12];
+    char magicPacket[204];
+
 
     int socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
@@ -39,37 +42,23 @@ int main() {
 
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(9);
+    server_addr.sin_port = htons(6589);
     server_addr.sin_addr.s_addr = INADDR_ANY;
     
-    bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr));    
+    int bindStatus = bind(socket_desc, (struct sockaddr *)&server_addr, sizeof(server_addr));
+    if (bindStatus < 0) {
+        printf("Binding to a network socket failed.\n");
+        printf("Status code: %i\n", bindStatus);
+        return bindStatus;
+    }
 
-    int i = 0;
 
     printf("What is the MAC address?\n");
     scanf("%17s", address);
 
-    for (i = 0; i < strlen(address); i++) {
-        address[i] = toupper(address[i]);
-    }
-
-    // Convert the string to an array of integers
-    int j = 0;
-    for (i = 0; i < strlen(address); i++) {
-        char pair[3];
-        address[i] = (char) toupper(address[i]);
-
-        // If there is a non-character or non-hex value entered, skip
-        if ( isSymbol(address[i+1]) ) {continue;}
-        if ( isSymbol(address[i]) ) {continue;}
-        if (address[i] > 'F') {continue;}
-
-        pair[0] = address[i];
-        pair[1] = address[i+1];
-        pair[2] = '\0';
-
-        addressBytes[j] = (int) strtol(pair, NULL, 16);
-        j++;
+    for (i = 0; i < sizeof(address) / sizeof(address[0]); i++) {
+        if ( !isSymbol(address[i]) ) {continue;}
+        addressBytes[i] = address[i];
     }
 
     int magicReturn = create_magic_packet(addressBytes, sizeof(addressBytes), magicPacket, sizeof(magicPacket));
@@ -77,7 +66,7 @@ int main() {
         return magicReturn;
     }
 
-    int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, () &recv_addr, sizeof(recv_addr));
+    int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, (struct sockaddr*) &recv_addr, sizeof(recv_addr));
     if (sendStatus != sizeof(magicPacket)) {
         printf("There was an error sending the packet.\n");
         return sendStatus;

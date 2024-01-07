@@ -11,7 +11,7 @@ int create_magic_packet(char *address, int sizeAddress,  char *destination, int 
       printf("The current allocation is %i.\n", sizeDestination);
         return EINVAL;
     }
-    if (sizeAddress != 6) {
+    if (sizeAddress != 12) {
         printf("This isn't a valid MAC address. Please insert a valid MAC address.\n");
         return EINVAL;
     }

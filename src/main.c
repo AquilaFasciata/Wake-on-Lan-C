@@ -27,8 +27,8 @@ int isSymbol(char character) {
 
 int main() {
     char address[18];
-    int addressBytes[6];
-    int magicPacket[102];
+    char addressArr[14];
+    unsigned long magicPacket[17];
 
     int socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
@@ -56,26 +56,18 @@ int main() {
         address[i] = toupper(address[i]);
     }
 
-    // Convert the string to an array of integers
+    // Take input from array and remove seperators
     int j = 0;
     for (i = 0; i < strlen(address); i++) {
-        char pair[3];
-        address[i] = (char) toupper(address[i]);
-
-        // If there is a non-character or non-hex value entered, skip
-        if ( isSymbol(address[i+1]) ) {continue;}
-        if ( isSymbol(address[i]) ) {continue;}
-        if (address[i] > 'F') {continue;}
-
-        pair[0] = address[i];
-        pair[1] = address[i+1];
-        pair[2] = '\0';
-
-        addressBytes[j] = (int) strtol(pair, NULL, 16);
+        if (!isalnum(address[i])) {continue;}
+        if (i == 14) {
+            addressArr[i] = '\0';
+        }
+        addressArr[j] = address[i];
         j++;
     }
 
-    int magicReturn = create_magic_packet(addressBytes, sizeof(addressBytes), magicPacket, sizeof(magicPacket));
+    int magicReturn = create_magic_packet(addressArr, sizeof(addressArr), magicPacket, sizeof(magicPacket));
     if (magicReturn != 0) {
         return magicReturn;
     }

@@ -29,7 +29,7 @@ int main() {
     int i = 0;
 
     char address[18];
-    char addressBytes[12];
+    char addressBytes[13] = "Garbled nons";
     char magicPacket[204];
 
 
@@ -44,6 +44,9 @@ int main() {
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(6589);
     server_addr.sin_addr.s_addr = INADDR_ANY;
+
+    int broadcastOpt = 1;
+    setsockopt(socket_desc, SOL_SOCKET, SO_BROADCAST, &broadcastOpt, sizeof(int));
     
     int bindStatus = bind(socket_desc, (struct sockaddr *)&server_addr, sizeof(server_addr));
     if (bindStatus < 0) {
@@ -56,23 +59,25 @@ int main() {
     printf("What is the MAC address?\n");
     scanf("%17s", address);
 
-    for (i = 0; i < sizeof(address) / sizeof(address[0]); i++) {
-        if ( !isSymbol(address[i]) ) {continue;}
-        addressBytes[i] = address[i];
+    int j = 0;
+    for (i = 0; i < strlen(address); i++) {
+        if (!isalnum(address[i])) {continue;}
+        *(addressBytes + j) = address[i];
+        j++;
     }
+    addressBytes[strlen(addressBytes) + 1] = '\0';
+    
 
-    int magicReturn = create_magic_packet(addressBytes, sizeof(addressBytes), magicPacket, sizeof(magicPacket));
+    int magicReturn = create_magic_packet(addressBytes, strlen(addressBytes), magicPacket, sizeof(magicPacket));
     if (magicReturn != 0) {
         return magicReturn;
-    }
-
-    for (i = 0; i < sizeof(magicPacket) / sizeof(magicPacket[0]); i++) {
-        printf("%c", magicPacket[i]);
     }
 
     int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, (struct sockaddr*) &recv_addr, sizeof(recv_addr));
     if (sendStatus != sizeof(magicPacket)) {
         printf("There was an error sending the packet.\n");
+        printf("Return code: %i\n", sendStatus);
+        printf("Error was %d: %s\n", errno, strerror(errno));
         return sendStatus;
     }
 

@@ -26,14 +26,14 @@ int isSymbol(char character) {
 }
 
 int main() {
-    int i = 0;
-
     char address[18];
-    char addressBytes[13] = "Garbled nons";
-    char magicPacket[204];
-
+    int addressBytes[6];
+    int magicPacket[102];
 
     int socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+
+    int broadcast = 1;
+    setsockopt(socket_desc, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(int));
 
     struct sockaddr_in recv_addr;
     recv_addr.sin_addr.s_addr = INADDR_BROADCAST;
@@ -42,44 +42,51 @@ int main() {
 
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(6589);
+    server_addr.sin_port = htons(9);
     server_addr.sin_addr.s_addr = INADDR_ANY;
-
-    int broadcastOpt = 1;
-    setsockopt(socket_desc, SOL_SOCKET, SO_BROADCAST, &broadcastOpt, sizeof(int));
     
-    int bindStatus = bind(socket_desc, (struct sockaddr *)&server_addr, sizeof(server_addr));
-    if (bindStatus < 0) {
-        printf("Binding to a network socket failed.\n");
-        printf("Status code: %i\n", bindStatus);
-        return bindStatus;
-    }
+    bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr));    
 
+    int i = 0;
 
     printf("What is the MAC address?\n");
     scanf("%17s", address);
 
+    for (i = 0; i < strlen(address); i++) {
+        address[i] = toupper(address[i]);
+    }
+
+    // Convert the string to an array of integers
     int j = 0;
     for (i = 0; i < strlen(address); i++) {
-        if (!isalnum(address[i])) {continue;}
-        *(addressBytes + j) = address[i];
+        char pair[3];
+        address[i] = (char) toupper(address[i]);
+
+        // If there is a non-character or non-hex value entered, skip
+        if ( isSymbol(address[i+1]) ) {continue;}
+        if ( isSymbol(address[i]) ) {continue;}
+        if (address[i] > 'F') {continue;}
+
+        pair[0] = address[i];
+        pair[1] = address[i+1];
+        pair[2] = '\0';
+
+        addressBytes[j] = (int) strtol(pair, NULL, 16);
         j++;
     }
-    addressBytes[strlen(addressBytes) + 1] = '\0';
-    
 
-    int magicReturn = create_magic_packet(addressBytes, strlen(addressBytes), magicPacket, sizeof(magicPacket));
+    int magicReturn = create_magic_packet(addressBytes, sizeof(addressBytes), magicPacket, sizeof(magicPacket));
     if (magicReturn != 0) {
         return magicReturn;
     }
 
-    int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, (struct sockaddr*) &recv_addr, sizeof(recv_addr));
+    int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, (struct sockaddr*)&recv_addr, sizeof(recv_addr));
     if (sendStatus != sizeof(magicPacket)) {
         printf("There was an error sending the packet.\n");
-        printf("Return code: %i\n", sendStatus);
-        printf("Error was %d: %s\n", errno, strerror(errno));
+        printf("The error code is %i: %s\n", errno, strerror(errno));
         return sendStatus;
     }
+
 
     return 0;
 }

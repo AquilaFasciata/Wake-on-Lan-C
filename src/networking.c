@@ -1,14 +1,13 @@
-#include <sys/socket.h>
 #include <stdio.h>
 #include <errno.h>
 
-int create_magic_packet(int *address, int sizeAddress,  int *destination, int sizeDestination) {
+int create_magic_packet(char *address, int sizeAddress,  char *destination, int sizeDestination) {
     int i = 0;
     sizeDestination /= sizeof(*destination);
     sizeAddress /= sizeof(*address);
 
-    if (sizeDestination != 102) {
-        printf("This isn't a valid magic packet allocation; please allocate an array of 102.\n");
+    if (sizeDestination != 204) {
+        printf("This isn't a valid magic packet allocation; please allocate an array of 204.\n");
       printf("The current allocation is %i.\n", sizeDestination);
         return EINVAL;
     }
@@ -18,12 +17,12 @@ int create_magic_packet(int *address, int sizeAddress,  int *destination, int si
     }
 
     // Adds 6 bytes of FF as per WoL Spec
-    for (i = 0; i < 6; i++) {
-        *(destination + i) = 255;
+    for (i = 0; i < 12; i++) {
+        *(destination + i) = 'f';
     }
 
-    for (i = i; i < sizeDestination; i++) {
-        *(destination + i) = *(address + (i % sizeAddress ));
+    for (i = i; i < 204; i++) {
+        *(destination + i) = *(address + (i % 12));
     }
 
     return 0;

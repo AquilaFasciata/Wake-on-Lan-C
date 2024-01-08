@@ -3,3 +3,6 @@ obj/*
 obj/*
 wol
 .vscode/settings.json
+.gdbinit
+.vscode/launch.json
+.vscode/tasks.json

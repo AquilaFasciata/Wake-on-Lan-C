@@ -32,6 +32,9 @@ int main() {
 
     int socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
+    int broadcast = 1;
+    setsockopt(socket_desc, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(int));
+
     struct sockaddr_in recv_addr;
     recv_addr.sin_addr.s_addr = INADDR_BROADCAST;
     recv_addr.sin_family = AF_INET;
@@ -77,9 +80,10 @@ int main() {
         return magicReturn;
     }
 
-    int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, () &recv_addr, sizeof(recv_addr));
+    int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, (struct sockaddr*)&recv_addr, sizeof(recv_addr));
     if (sendStatus != sizeof(magicPacket)) {
         printf("There was an error sending the packet.\n");
+        printf("The error code is %i: %s\n", errno, strerror(errno));
         return sendStatus;
     }
 

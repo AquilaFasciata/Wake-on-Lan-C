@@ -6,3 +6,4 @@ wol
 .gdbinit
 .vscode/launch.json
 .vscode/tasks.json
+build

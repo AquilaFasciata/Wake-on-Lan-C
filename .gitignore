@@ -7,3 +7,12 @@ wol
 .vscode/launch.json
 .vscode/tasks.json
 build
+CMakeFiles
+cmake_install.cmake
+CMakeCache.txt
+CPackConfig.cmake
+CPackSourceConfig.cmake
+CTestTestfile.cmake
+DartConfiguration.tcl
+libwake-on-lib.a
+Makefile

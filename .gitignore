@@ -16,3 +16,4 @@ CTestTestfile.cmake
 DartConfiguration.tcl
 libwake-on-lib.a
 Makefile
+wake-on-lan

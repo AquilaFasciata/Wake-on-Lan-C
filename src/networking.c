@@ -1,31 +1,41 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
+#include <ctype.h>
 
-int create_magic_packet(char *address, int sizeAddress,  unsigned long *destination, int sizeDestination) {
-    int i = 0;
+int create_magic_packet(char *address, int sizeAddress,  char *destination, int sizeDestination) {
     sizeDestination /= sizeof(*destination);
     sizeAddress /= sizeof(*address);
+    int i = 0;
 
-    if (sizeDestination != 17) {
-        printf("This isn't a valid magic packet allocation; please allocate an array of 17.\n");
+    char tempAddr[8];
+
+    if (sizeDestination != 102) {
+        printf("This isn't a valid magic packet allocation; please allocate an array of 102.\n");
       printf("The current allocation is %i.\n", sizeDestination);
         return EINVAL;
     }
-    if (sizeAddress != 14) {
+    if (sizeAddress != 12) {
         printf("This isn't a valid MAC address. Please insert a valid MAC address.\n");
         return EINVAL;
     }
+    printf("The address is: ");
+    for (; i < sizeAddress; i++) {
+        printf("%c", *(address + i));
+    }
 
-    *destination = 0xffffffff;
+    for (i = 0; i < 7; i++) {
+        *(destination + i) = 0xff;
+    }
 
-    unsigned long addressValue = 0;
-    addressValue = strtoul(address, NULL, 16);
+    for (; i < sizeDestination; i++) {
+        *(destination + i) = *(address + (i % 8));
+    }
 
-    for (i = 1; i < sizeDestination; i++) {
-        *(destination + i) = addressValue;
+    printf("The packet is: ");
+    for (i = 0; i < sizeDestination; i++) {
+        printf("%c", *(destination + i));
     }
     
     return 0;
 }
-

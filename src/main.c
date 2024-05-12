@@ -27,8 +27,13 @@ int isSymbol(char character) {
 
 int main() {
     char address[18];
-    char addressArr[14];
-    unsigned long magicPacket[17];
+    char addressArr[12];
+    char magicPacket[102];
+    
+    int i = 0;
+    for (i = 0; i < sizeof(magicPacket); i++) {
+        magicPacket[i] = '\0';
+    }
 
     int socket_desc = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
 
@@ -47,7 +52,6 @@ int main() {
     
     bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr));    
 
-    int i = 0;
 
     printf("What is the MAC address?\n");
     scanf("%17s", address);
@@ -60,9 +64,6 @@ int main() {
     int j = 0;
     for (i = 0; i < strlen(address); i++) {
         if (!isalnum(address[i])) {continue;}
-        if (i == 14) {
-            addressArr[i] = '\0';
-        }
         addressArr[j] = address[i];
         j++;
     }
@@ -72,7 +73,7 @@ int main() {
         return magicReturn;
     }
 
-    int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, (struct sockaddr*)&recv_addr, sizeof(recv_addr));
+    int sendStatus = sento(socket_desc, &magicPacket, sizeof(magicPacket), 0, (struct sockaddr*)&recv_addr, sizeof(recv_addr));
     if (sendStatus != sizeof(magicPacket)) {
         printf("There was an error sending the packet.\n");
         printf("The error code is %i: %s\n", errno, strerror(errno));

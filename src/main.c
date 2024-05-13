@@ -16,6 +16,7 @@
     a-z = 97-122
 */
 
+#define PORT 1
 
 int isSymbol(char character) {
     if (character < 48) {return 1;}
@@ -43,11 +44,11 @@ int main() {
     struct sockaddr_in recv_addr;
     recv_addr.sin_addr.s_addr = INADDR_BROADCAST;
     recv_addr.sin_family = AF_INET;
-    recv_addr.sin_port = htons(9);
+    recv_addr.sin_port = htons(PORT);
 
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(9);
+    server_addr.sin_port = htons(PORT);
     server_addr.sin_addr.s_addr = INADDR_ANY;
     
     bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr));    

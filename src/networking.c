@@ -27,7 +27,7 @@ int create_magic_packet(char *address, int sizeAddress,  char *destination, int 
         *(destination + i) = 0xff;
     }
 
-    int* j = (int *) malloc(sizeof(int));
+    int* j = (int *) malloc(sizeof(int)); // Freed @ Line #40
     *j = 0;
     for(i; i < sizeDestination; i++) {
         char pair[3];

@@ -8,8 +8,6 @@ int create_magic_packet(char *address, int sizeAddress,  char *destination, int 
     sizeAddress /= sizeof(*address);
     int i = 0;
 
-    char tempAddr[8];
-
     if (sizeDestination != 102) {
         printf("This isn't a valid magic packet allocation; please allocate an array of 102.\n");
       printf("The current allocation is %i.\n", sizeDestination);
@@ -23,19 +21,23 @@ int create_magic_packet(char *address, int sizeAddress,  char *destination, int 
     for (; i < sizeAddress; i++) {
         printf("%c", *(address + i));
     }
+    printf("\n");
 
-    for (i = 0; i < 7; i++) {
+    for (i = 0; i < 6; i++) {
         *(destination + i) = 0xff;
     }
 
-    for (; i < sizeDestination; i++) {
-        *(destination + i) = *(address + (i % 8));
+    int* j = (int *) malloc(sizeof(int));
+    *j = 0;
+    for(i; i < sizeDestination; i++) {
+        char pair[3];
+        pair[0] = *(address + (*j % 12));
+        pair[1] = *(address + ((*j % 12) + 1));
+        pair[2] = '\0';
+        *(destination + i) = strtol(pair, NULL, 16);
+        *j += 2;
     }
+    free(j);
 
-    printf("The packet is: ");
-    for (i = 0; i < sizeDestination; i++) {
-        printf("%c", *(destination + i));
-    }
-    
     return 0;
 }

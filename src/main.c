@@ -74,11 +74,13 @@ int main() {
         return magicReturn;
     }
 
-    int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, (struct sockaddr*)&recv_addr, sizeof(recv_addr));
-    if (sendStatus != sizeof(magicPacket)) {
-        printf("There was an error sending the packet.\n");
-        printf("The error code is %i: %s\n", errno, strerror(errno));
-        return sendStatus;
+    for (int i = 0; i < 3; i++) {
+        int sendStatus = sendto(socket_desc, &magicPacket, sizeof(magicPacket), 0, (struct sockaddr*)&recv_addr, sizeof(recv_addr));
+        if (sendStatus != sizeof(magicPacket)) {
+            printf("There was an error sending the packet.\n");
+            printf("The error code is %i: %s\n", errno, strerror(errno));
+            return sendStatus;
+        }
     }
 
 

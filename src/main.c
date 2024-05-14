@@ -26,7 +26,7 @@ int isSymbol(char character) {
         else {return 0;}
 }
 
-int main() {
+int main(int argc, char *argv[]) {
     char address[18];
     char addressArr[12];
     char magicPacket[102];
@@ -54,8 +54,19 @@ int main() {
     bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr));    
 
 
-    printf("What is the MAC address?\n");
-    scanf("%17s", address);
+    if (argc == 1) {
+        printf("What is the MAC address?\n");
+        scanf("%17s", address);
+    }
+    else {
+        if (strlen(argv[1]) > 18) {
+            printf("%s is not a valid MAC address.\n", argv[1]);
+            return EINVAL;
+        }
+        for (i = 0; i < strlen(argv[1]); i++) {
+            address[i] = *((argv[1]) + i);
+        }
+    }
 
     for (i = 0; i < strlen(address); i++) {
         address[i] = toupper(address[i]);

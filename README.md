@@ -18,6 +18,8 @@ Simply run the binary that is built and it will prompt you for a MAC Address. Si
 ```
 $ ./wake-on-lan
 ```
+It will ask you for the MAC address to send the packet to.
+
 __NOTE: It's very likely that the name of the binary will change in the future!!__ I don't like typing more than
 I need to, so I want the command to be shorter when I deploy this in my own environments. 
 

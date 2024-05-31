@@ -8,6 +8,8 @@
 #include <sys/types.h>
 #include <errno.h>
 #include "networking.h"
+#include <unistd.h>
+#include <getopt.h>
 
 /* 
     ASCII Values
@@ -16,7 +18,7 @@
     a-z = 97-122
 */
 
-#define PORT 1
+#define VERSION "0.02a"
 
 int isSymbol(char character) {
     if (character < 48) {return 1;}
@@ -30,7 +32,36 @@ int main(int argc, char *argv[]) {
     char address[18];
     char addressArr[12];
     char magicPacket[102];
+    int port = 1;
+    char opt;
     
+    while ((opt = getopt(argc, argv, "p:hv")) != -1) {
+        switch (opt) {
+            case 'v':
+                printf("Version: ");
+                printf(VERSION);
+                printf("\n\n");
+                return 0;
+            case 'p':
+                port = strtol(optarg, NULL, 10);
+                break;
+            case 'h':
+                printf("Usage: wol [options] <MAC Address>\n");
+                printf("   or: wol\n\n");
+                printf("Sends a magic packet to the specified MAC Address\n\n");
+                printf("Options:\n");
+                printf("-p <port>       Specifies the port on which to send the packet\n");
+                printf("-h              Display this dialog\n");
+                printf("-v              Display version info\n\n");
+                return 0;
+            default:
+                break;
+        }
+    }
+    if (argv[optind] != NULL) {
+        strncpy(address, argv[optind], sizeof(address));
+    }
+
     int i = 0;
     for (i = 0; i < sizeof(magicPacket); i++) {
         magicPacket[i] = '\0';
@@ -44,11 +75,11 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in recv_addr;
     recv_addr.sin_addr.s_addr = INADDR_BROADCAST;
     recv_addr.sin_family = AF_INET;
-    recv_addr.sin_port = htons(PORT);
+    recv_addr.sin_port = htons(port);
 
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(PORT);
+    server_addr.sin_port = htons(port);
     server_addr.sin_addr.s_addr = INADDR_ANY;
     
     bind(socket_desc, (struct sockaddr*)&server_addr, sizeof(server_addr));    

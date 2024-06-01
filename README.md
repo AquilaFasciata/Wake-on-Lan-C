@@ -27,10 +27,8 @@ I need to, so I want the command to be shorter when I deploy this in my own envi
 
 This is heavily WIP; as such, there are several current limitations that are in the process of being worked out:
 
-* The port is specified at build time. It can be changed using a macro (PORT) but will have an argument soon
 * Currently hard coded to broadcast at the 192.168.0.0/24 address space
   * This will be ironed out, it will take some time as I want to ensure it is done properly and in an intuitive way
-* No command line arguments are accepted at this time (currently working on!)
 * The program itself is not cross platform (though any card that complies with the WoL standard should be woken). This is 
 a long ways off from being resolved. 
 * Must use either `:` or `-` for the seperators in the address. 

@@ -18,7 +18,7 @@
     a-z = 97-122
 */
 
-#define VERSION "0.02a"
+#define VERSION "0.02"
 
 int isSymbol(char character) {
     if (character < 48) {return 1;}
